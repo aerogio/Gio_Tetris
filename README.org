@@ -1,0 +1,17 @@
+* Gio's Tetris 
+This is my attempt to create a tetris game with
+pygame. Honestly I know there are infinite other
+attempts out there mostly success and so much
+better examples but I still want to try it out, to
+learn more how to use 
+- def
+- class
+
+this things that makes efficient a program
+
+** v1 
+
+Basically I need to 
+- create new shape
+- create solidity in the bottom
+- Manage to delete the line when it's full
