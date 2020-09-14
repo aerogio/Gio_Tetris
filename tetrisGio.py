@@ -22,6 +22,8 @@ timer2 = 0
 clock = pygame.time.Clock()
 
 run = True
+RUNNING, PAUSE = 0,1
+state = RUNNING
 bar = [20,80]
 delta = 20
 
@@ -34,13 +36,14 @@ while run:
     h = bar[1]
     gio = {}
     if len(xf) >= 1:
-        for z in range(b-delta,min(yf),-delta):
+        print(yf)
+        for z in range(b-delta,min(yf)-delta,-delta):
             gio[z] = []
             for i in range(len(xf)):
                 if yf[i]+hf[i] >= z:
                     gio[z].append(range(xf[i],xf[i]+wf[i],delta))
         
-    terra = True    
+    terra = True
     while terra:
         
         win.fill((100,0,40))
@@ -51,15 +54,18 @@ while run:
                 pygame.draw.rect(win, (255,0,0), (xf[ii],yf[ii],wf[ii],hf[ii]))        
 
         for event in pygame.event.get():
-            
             if event.type == pygame.QUIT:
                 terra = False
                 run = False
-            if event.type == pygame.KEYDOWN:
+            elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     run = False
                     terra = False
-
+                elif event.key == pygame.K_p:
+                    state = PAUSE
+                elif event.key == pygame.K_s:
+                    state = RUNNING
+                    
                     
                 elif event.key == pygame.K_UP and y < b - delta - max(h,w):
                     i = random.randrange(2)
@@ -77,7 +83,7 @@ while run:
         dt = clock.tick()
         timer2 = timer2 + dt
 
-        if timer2 > 1000: # and y < b - h - delta:
+        if timer2 > 1000: 
             y = y + delta
             timer2 = 0
 
@@ -88,29 +94,37 @@ while run:
             x = x + delta
         if keys[pygame.K_DOWN] and y < b - h - delta:
             y = y + delta
-
+            
         if len(xf) >= 1:
             for z in range(b-delta,min(yf),-delta):
                 for i in range(len(gio[z])):
                     for j in range(x,x+w,delta):
-                        if j in gio[z][i]:
+                        if j in gio[z][i]:                            
                             if y >= b - delta - h - hf[i]:
                                 terra = False
-                                xf.append(x)
-                                yf.append(y)
-                                wf.append(w)
-                                hf.append(h)
+                        else:
+                            if y >= b - delta - h:
+                                terra = False
+        else:
+            if y >= b - delta - h:
+                terra = False
 
-        if y >= b - delta - h:
-            terra = False
+        if not terra:
             xf.append(x)
             yf.append(y)
             wf.append(w)
             hf.append(h)
             
-        pygame.draw.rect(win, (40,10,50), (0,0,a,b), 2*delta)
-        pygame.display.update()
-
+        if state == PAUSE:
+            pause_text = pygame.font.SysFont('Consolas', 32).render('Pause', True, pygame.color.Color('White'))
+            win.blit(pause_text, (100, 100))
+            for event in pygame.event.get():
+                if event.key == pygame.K_p:
+                    state = RUNNING
+        elif state == RUNNING:
+            pygame.draw.rect(win, (40,10,50), (0,0,a,b), 2*delta)
+            pygame.display.update()
+        
 
 pygame.quit()
 
