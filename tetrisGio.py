@@ -39,7 +39,7 @@ while run:
 
     if len(xf) >= 1:
         print(yf)
-        for z in range(b-delta,min(yf)-delta,-delta):
+        for z in range(b-delta,min(yf),-delta):
             if z not in gio.keys():
                 gio[z] = []
             if yf[-1]+hf[-1] >= z:
@@ -105,7 +105,7 @@ while run:
                 for i in range(len(gio[z])):
                     for j in range(x,x+w,delta):
                         if j in gio[z][i]:
-                            if y >= z - h:
+                            if y >= z - delta - h:
                                 terra = False
                         else:
                             if y >= b - delta - h:
