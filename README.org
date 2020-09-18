@@ -21,6 +21,14 @@ but sometimes it doesnt really work, but most
 times it does!
 
 NEXT UP: try to kill the ring when it's full.
+Which makes sense, so basically two things
+
+
+Instead of drawing the rectangle I should draw
+gio[z] for z in 580,560...
+So that when gio[z] is complete I can delete a line
+
+
 
 Good Luck
 

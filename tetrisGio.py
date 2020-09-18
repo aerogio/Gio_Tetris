@@ -48,6 +48,7 @@ while run:
                 for bta in range(xf[-1], xf[-1]+wf[-1], delta):
                     gio[z].append(bta)
                 gio[z] = sorted(gio[z])
+                # there is a mistake in this, try to first add a horizontal bar and then a vertical one and you will see 
 
     if len(xf) >= 1:
         for z in range(b-delta, min(yf), -delta):
@@ -59,10 +60,12 @@ while run:
                 jj += delta
                     
                     
-                if jj >= a-delta:
+                if jj > a-delta:
                     keepline = False
                     print('delete line')
-                    b = b-delta
+                    for zz in range(z, min(gio.keys()), -delta):
+                        gio[zz] = gio[zz-delta]
+                    gio[min(gio.keys())] = []
                     
 
     terra = True
@@ -72,8 +75,9 @@ while run:
         pygame.time.delay(60)
         pygame.draw.rect(win, (255,0,0), (x,y,w,h))
         if len(xf) >= 1:
-            for ii in range(len(xf)):
-                pygame.draw.rect(win, (255,0,0), (xf[ii],yf[ii],wf[ii],hf[ii]))        
+            for z in range(b-delta, min(yf), -delta):
+                for ii in gio[z]:
+                    pygame.draw.rect(win, (150,0,0), (ii, z-delta, delta, delta))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
