@@ -10,7 +10,7 @@ b = 600
 win = pygame.display.set_mode((a,b))
 pygame.display.set_caption('Tetris')
 
-# # this grid is too slow
+# this grid is too slow
 # def drawGrid():
 #     bs = delta
 #     for xx in range(a):
@@ -35,6 +35,7 @@ while run:
     w = bar[0]
     h = bar[1]
     gio = {}
+
     if len(xf) >= 1:
         print(yf)
         for z in range(b-delta,min(yf)-delta,-delta):
