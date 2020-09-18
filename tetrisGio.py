@@ -41,29 +41,28 @@ while run:
     keepline = True
 
     if len(xf) >= 1:
-        for z in range(b-delta,min(yf),-delta):
+        for z in range(b-delta, min(yf), -delta):
             if z not in gio.keys():
                 gio[z] = []
             if yf[-1]+hf[-1] >= z:
-                gio[z].append(range(xf[-1],xf[-1]+wf[-1],delta))
-                gio[z] = sorted(gio[z], key=lambda r: r.start)
+                for bta in range(xf[-1], xf[-1]+wf[-1], delta):
+                    gio[z].append(bta)
+                gio[z] = sorted(gio[z])
 
     if len(xf) >= 1:
-        for z in range(b-delta,min(yf),-delta):
+        for z in range(b-delta, min(yf), -delta):
             jj = delta
             keepline = True
             while keepline:
-                for i in range(len(gio[z])):
-                    #print('this is gio[z][i]: {}'.format(gio[z][i]))
-                    if jj not in gio[z][i]:
-                        keepline = False
-                    print(jj)
-                    jj += delta
+                if jj not in gio[z]:
+                    keepline = False
+                jj += delta
                     
                     
-                    if jj >= a-delta:
-                        keepline = False
-                        print('delete line')
+                if jj >= a-delta:
+                    keepline = False
+                    print('delete line')
+                    b = b-delta
                     
 
     terra = True
@@ -120,14 +119,13 @@ while run:
             
         if len(xf) >= 1:
             for z in range(b-delta,min(yf),-delta):
-                for i in range(len(gio[z])):
-                    for j in range(x,x+w,delta):
-                        if j in gio[z][i]:
-                            if y >= z - delta - h:
-                                terra = False
-                        else:
-                            if y >= b - delta - h:
-                                terra = False
+                for j in range(x,x+w,delta):
+                    if j in gio[z]:
+                        if y >= z - delta - h:
+                            terra = False
+                    else:
+                        if y >= b - delta - h:
+                            terra = False
         else:
             if y >= b - delta - h:
                 terra = False
