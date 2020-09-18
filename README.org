@@ -4,21 +4,25 @@ pygame. Honestly I know there are infinite other
 attempts out there mostly success and so much
 better examples but I still want to try it out, to
 learn more how to use 
+
 - def
 - class
 
-this things that makes efficient a program
+this things that makes efficient a program and
+object oriented stuff. Even though I am not sure
+if that makes sense or not. 
+Anyways
+Let's try it out!
 
-** v1 
+State of the art of now: 
 
-Basically I need to 
-- create new shape
-- create solidity in the bottom
-- Manage to delete the line when it's full
+I manage to have some sort of solidifying thing,
+but sometimes it doesnt really work, but most
+times it does!
 
-** v2
-I created v2 because I was unsure, but luckily it
-looks like it's goin well so now I want to merge
-v2 in v1, let's see
+NEXT UP: try to kill the ring when it's full.
+
+Good Luck
+
 
 

@@ -30,6 +30,7 @@ delta = 20
 xf,yf,wf,hf = [[],[],[],[]]
 
 gio = {}
+jj = delta
 
 while run:
     x = a//2
@@ -37,17 +38,34 @@ while run:
     w = bar[0]
     h = bar[1]
 
+    keepline = True
+
     if len(xf) >= 1:
-        print(yf)
         for z in range(b-delta,min(yf),-delta):
             if z not in gio.keys():
                 gio[z] = []
             if yf[-1]+hf[-1] >= z:
                 gio[z].append(range(xf[-1],xf[-1]+wf[-1],delta))
-#             for i in range(len(xf)):
-#                 if yf[i]+hf[i] >= z:
-#                     gio[z].append(range(xf[i],xf[i]+wf[i],delta))
-        
+                gio[z] = sorted(gio[z], key=lambda r: r.start)
+
+    if len(xf) >= 1:
+        for z in range(b-delta,min(yf),-delta):
+            jj = delta
+            keepline = True
+            while keepline:
+                for i in range(len(gio[z])):
+                    #print('this is gio[z][i]: {}'.format(gio[z][i]))
+                    if jj not in gio[z][i]:
+                        keepline = False
+                    print(jj)
+                    jj += delta
+                    
+                    
+                    if jj >= a-delta:
+                        keepline = False
+                        print('delete line')
+                    
+
     terra = True
     while terra:
         
