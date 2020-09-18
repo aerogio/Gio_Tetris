@@ -29,20 +29,24 @@ delta = 20
 
 xf,yf,wf,hf = [[],[],[],[]]
 
+gio = {}
+
 while run:
     x = a//2
     y = 0
     w = bar[0]
     h = bar[1]
-    gio = {}
 
     if len(xf) >= 1:
         print(yf)
         for z in range(b-delta,min(yf)-delta,-delta):
-            gio[z] = []
-            for i in range(len(xf)):
-                if yf[i]+hf[i] >= z:
-                    gio[z].append(range(xf[i],xf[i]+wf[i],delta))
+            if z not in gio.keys():
+                gio[z] = []
+            if yf[-1]+hf[-1] >= z:
+                gio[z].append(range(xf[-1],xf[-1]+wf[-1],delta))
+#             for i in range(len(xf)):
+#                 if yf[i]+hf[i] >= z:
+#                     gio[z].append(range(xf[i],xf[i]+wf[i],delta))
         
     terra = True
     while terra:
@@ -100,8 +104,8 @@ while run:
             for z in range(b-delta,min(yf),-delta):
                 for i in range(len(gio[z])):
                     for j in range(x,x+w,delta):
-                        if j in gio[z][i]:                            
-                            if y >= b - delta - h - hf[i]:
+                        if j in gio[z][i]:
+                            if y >= z - h:
                                 terra = False
                         else:
                             if y >= b - delta - h:
