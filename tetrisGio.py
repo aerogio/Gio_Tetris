@@ -1,4 +1,4 @@
-# Hello, this is my trial to code tetrisimport pygame
+# Hello, this is my trial to code tetris
 import pygame
 import random
 #Initialize pygame
