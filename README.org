@@ -5,8 +5,8 @@ attempts out there mostly success and so much
 better examples but I still want to try it out, to
 learn more how to use 
 
-- def
-- class
+1. def
+2. class
 
 this things that makes efficient a program and
 object oriented stuff. Even though I am not sure
@@ -20,17 +20,22 @@ I manage to have some sort of solidifying thing,
 but sometimes it doesnt really work, but most
 times it does!
 
-NEXT UP: try to kill the ring when it's full.
-Which makes sense, so basically two things
-
-
-Instead of drawing the rectangle I should draw
-gio[z] for z in 580,560...
-So that when gio[z] is complete I can delete a line
-
-
-
 Good Luck
 
+* Omg 
+it looks so nice it's basically perfect, but there
+are some stuff which don't work super well. Like,
+when you go inside something from lateral and not
+from the top, well you shouldn't be able to do
+that.
 
+* Also One thing
+
+Add new shapes, with like class
+
+* Also
+
+As soon as you delete lines, the game should go
+faster, and you can do it with levels and the
+counter variable which I already created
 

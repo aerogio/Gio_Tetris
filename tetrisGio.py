@@ -1,12 +1,10 @@
 # Hello, this is my trial to code tetris
 import pygame
 import random
-#Initialize pygame
 pygame.init()
 
-#create the window
-a = 400
-b = 600
+a = 240
+b = 400
 win = pygame.display.set_mode((a,b))
 pygame.display.set_caption('Tetris')
 
@@ -26,6 +24,7 @@ RUNNING, PAUSE = 0,1
 state = RUNNING
 bar = [20,80]
 delta = 20
+counter = 1 
 
 xf,yf,wf,hf = [[],[],[],[]]
 
@@ -38,17 +37,13 @@ while run:
     w = bar[0]
     h = bar[1]
 
-    keepline = True
-
     if len(xf) >= 1:
-        for z in range(b-delta, min(yf), -delta):
+        for z in range(yf[-1]+hf[-1], yf[-1], -delta):
             if z not in gio.keys():
                 gio[z] = []
-            if yf[-1]+hf[-1] >= z:
-                for bta in range(xf[-1], xf[-1]+wf[-1], delta):
-                    gio[z].append(bta)
-                gio[z] = sorted(gio[z])
-                # there is a mistake in this, try to first add a horizontal bar and then a vertical one and you will see 
+            for bta in range(xf[-1], xf[-1] + wf[-1], delta):
+                gio[z].append(bta)
+            gio[z] = sorted(gio[z])
 
     if len(xf) >= 1:
         for z in range(b-delta, min(yf), -delta):
@@ -62,10 +57,10 @@ while run:
                     
                 if jj > a-delta:
                     keepline = False
-                    print('delete line')
+                    counter += 1
                     for zz in range(z, min(gio.keys()), -delta):
                         gio[zz] = gio[zz-delta]
-                    gio[min(gio.keys())] = []
+                    gio[min(gio.keys())] = [] 
                     
 
     terra = True
