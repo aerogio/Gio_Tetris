@@ -4,8 +4,11 @@
 # tetris geometric constants
 
 delta = 20
-a = 16*delta
-b = 24*delta
+a = 14*delta
+b = 26*delta
+c = 23*delta
+textX = 15*delta
+textY = b//2
 
 # colors
 
