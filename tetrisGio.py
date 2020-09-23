@@ -15,6 +15,7 @@ def render_text(x,y):
     win.blit(text, (x,y))
     win.blit(level, (x+50,y+50))
 
+
 def drawBackground():
     win.fill(VIO)
     pygame.draw.rect(win,dVIO, (a, 0, c-a,b)) 
@@ -22,27 +23,22 @@ def drawBackground():
         for col in range(delta+ (row % (2*delta)), b-delta, 2*delta):
             pygame.draw.rect(win, dVIO, (row, col, delta,delta))
 
-            
+
 timer = 0
 clock = pygame.time.Clock()
 run = True
 RUNNING, PAUSE = 0,1
 state = RUNNING
-
-
 counter = 0
-
-xf,yf,wf,hf = [[], [], [], []]
+xf, yf, wf, hf = [[], [], [], []]
 
 gio = {}
-# jj = delta
 
 bar0 = Bar([delta,4*delta],BLU)
 bar1 = bar0
 
 while run:
 
-    render_text(textX,textY)
     bar0 = bar1
     rcol = random.randrange(4)
     if rcol is 0:
@@ -83,20 +79,28 @@ while run:
                     counter += 1
                     for zz in range(z, min(gio.keys()), -delta):
                         gio[zz] = gio[zz-delta]
-                    gio[min(gio.keys())] = [] 
-                    
-                    
+                    gio[min(gio.keys())] = []
+
     aria = True
     while aria:
         
         drawBackground()
         pygame.time.delay(60)
+
+        lll = rrr = True
+        for hh in range (y,y+h+delta):
+            if hh in gio.keys():
+                for xx in gio[hh]:
+                    if 0 < xx-x <= delta:
+                        rrr = False
+                    elif 0 < x-xx <= delta:
+                        lll = False
         
         if len(xf) >= 1:
             for z in range(b-delta, min(yf), -delta):
                 for ii in gio[z]:
                     pygame.draw.rect(win, GRI, (ii, z-delta, delta, delta))
-
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 aria = False
@@ -108,10 +112,9 @@ while run:
                 elif event.key == pygame.K_p:
                     state = PAUSE
                 elif event.key == pygame.K_s:
-                    state = RUNNING
+                    state = RUNNING                    
                     
-                    
-                elif event.key == pygame.K_UP and y < b - delta - max(h,w):
+                elif event.key == pygame.K_UP and y < b - delta - max(h,w) and lll is True and rrr is True:
                     i = random.randrange(2)
                     if delta < x < a - w - delta:
                         if w < h:
@@ -132,17 +135,9 @@ while run:
             timer = 0
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT] and x > delta and y < b - h - delta:
-            # for hh in range(y,y+h+delta):
-            #     if hh in gio.keys():
-            #         for xx in gio[hh]:
-            #             if abs(xx - x) < delta:
-            #                 x = x + delta
-            # It does not work, what I want to do is to avoid that they crash into the other already down
-
-            x = x - delta
-    
-        if keys[pygame.K_RIGHT] and x < a - w - delta and y < b - h - delta:
+        if keys[pygame.K_LEFT] and x > delta and y < b - h - delta and lll is True:
+            x = x - delta    
+        if keys[pygame.K_RIGHT] and x < a - w - delta and y < b - h - delta and rrr is True:
             x = x + delta
         if keys[pygame.K_DOWN] and y < b - h - delta:
             y = y + delta
@@ -159,13 +154,13 @@ while run:
         else:
             if y >= b - delta - h:
                 aria = False
-
+        
         if not aria:
             xf.append(x)
             yf.append(y)
             wf.append(w)
             hf.append(h)
-            
+        
         if state == PAUSE:
             pause_text = pygame.font.SysFont('Consolas', 32).render('Pause', True, pygame.color.Color('White'))
             win.blit(pause_text, (100, 100))
@@ -173,7 +168,6 @@ while run:
                 if event.key == pygame.K_p:
                     state = RUNNING
 
-                    
         elif state == RUNNING:
             # Border
             pygame.draw.rect(win, dVIO, (0,0,a,b), 2*delta)
@@ -183,8 +177,16 @@ while run:
             pygame.draw.rect(win, bar0.COLOUR, (x,y,w,h)) # HERE I WILL CHANGE, instead of drawing one rect, I can have a cycle for and draw every little square to create the shape. Also, instead of BLU I can put like shape.colour so that I create a class for every color and we automatically have the corresponding colour or dark color depending on the shape
             #bar0 = bar1
             render_text(textX,textY)
+
+            if 2*delta in gio.keys():
+                font = pygame.font.SysFont('Times New Roman', 60)
+                endtext = font.render('GAMEOVER', True, PINK)
+                win.blit(endtext, (textX-200,textY+100))
+                run = False
+                aria = False
+
             pygame.display.update()
-        
+
 pygame.quit()
 
 
