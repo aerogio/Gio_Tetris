@@ -5,16 +5,16 @@ from constants import *
 
 pygame.init()
 font = pygame.font.SysFont('Times New Roman', 30)
-
 win = pygame.display.set_mode((c,b))
 pygame.display.set_caption('Tetris')
+clock = pygame.time.Clock()
 
+# functions
 def render_text(x,y):
     text = font.render('L E V E L', True, PINK)
     level = font.render(str(counter), True, PINK)
     win.blit(text, (x,y))
     win.blit(level, (x+50,y+50))
-
 
 def drawBackground():
     win.fill(VIO)
@@ -23,15 +23,35 @@ def drawBackground():
         for col in range(delta+ (row % (2*delta)), b-delta, 2*delta):
             pygame.draw.rect(win, dVIO, (row, col, delta,delta))
 
+def randomcolor(x):
+    RCOL = random.randrange(x)
+    if RCOL == 0:
+        C, dC = VER, dVER
+    elif RCOL == 1:
+        C, dC = ROS, dROS
+    elif RCOL == 2:
+        C, dC = PINK, dPINK
+    elif RCOL == 3:
+        C, dC = BLU, dBLU
+    return C
 
+def endgame(x,y):
+    global run, aria
+    if 2*delta in gio.keys():
+        font = pygame.font.SysFont('Times New Roman', 60)
+        endtext = font.render('GAMEOVER', True, PINK)
+        win.blit(endtext, (textX-200,textY+100))
+        run = False
+        aria = False
+    return run, aria
+
+#variable inizialization
 timer = 0
-clock = pygame.time.Clock()
 run = True
 RUNNING, PAUSE = 0,1
 state = RUNNING
 counter = 0
 xf, yf, wf, hf = [[], [], [], []]
-
 gio = {}
 
 bar0 = Bar([delta,4*delta],BLU)
@@ -40,18 +60,11 @@ bar1 = bar0
 while run:
 
     bar0 = bar1
-    rcol = random.randrange(4)
-    if rcol is 0:
-        C, dC = VER, dVER
-    elif rcol is 1:
-        C, dC = ROS, dROS
-    elif rcol is 2:
-        C, dC = PINK, dPINK
-    elif rcol is 3:
-        C, dC = BLU, dBLU
-
-    bar1 = Bar([20,80], C)
     
+    C = randomcolor(4)
+    bar1 = Bar([delta,4*delta], C)
+    
+    #starting position
     x = a//2
     y = delta
     w = bar0.shape[0]
@@ -64,8 +77,7 @@ while run:
             for bta in range(xf[-1], xf[-1] + wf[-1], delta):
                 gio[z].append(bta)
             gio[z] = sorted(gio[z])
-
-    if len(xf) >= 1:
+            
         for z in range(b-delta, min(yf), -delta):
             jj = delta
             keepline = True
@@ -73,7 +85,6 @@ while run:
                 if jj not in gio[z]:
                     keepline = False
                 jj += delta 
-                    
                 if jj > a-delta:
                     keepline = False
                     counter += 1
@@ -83,9 +94,9 @@ while run:
 
     aria = True
     while aria:
-        
+    
         drawBackground()
-        pygame.time.delay(60)
+        pygame.time.delay(70)
 
         lll = rrr = True
         for hh in range (y,y+h+delta):
@@ -103,8 +114,7 @@ while run:
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                aria = False
-                run = False
+                aria = run = False
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     run = False
@@ -126,11 +136,11 @@ while run:
                         x = a - delta - h
                     h,w = w, h                    
                 
-
+        
         dt = clock.tick()
         timer = timer + dt
 
-        if timer > 1000 - 20*counter: 
+        if timer > 1000 - 20*counter and state == RUNNING: 
             y = y + delta
             timer = 0
 
@@ -162,12 +172,10 @@ while run:
             hf.append(h)
         
         if state == PAUSE:
-            pause_text = pygame.font.SysFont('Consolas', 32).render('Pause', True, pygame.color.Color('White'))
-            win.blit(pause_text, (100, 100))
-            for event in pygame.event.get():
-                if event.key == pygame.K_p:
-                    state = RUNNING
-
+            pause_text = pygame.font.SysFont('Times New Roman', 32).render('GAME IS PAUSED', True, pygame.color.Color('White'))
+            win.blit(pause_text, (a//2, c//2))
+            pygame.display.update()
+            
         elif state == RUNNING:
             # Border
             pygame.draw.rect(win, dVIO, (0,0,a,b), 2*delta)
@@ -175,16 +183,8 @@ while run:
             pygame.draw.rect(win, bar1.COLOUR, (textX+50,b//4,delta,4*delta))
             # Actual tetris stone
             pygame.draw.rect(win, bar0.COLOUR, (x,y,w,h)) # HERE I WILL CHANGE, instead of drawing one rect, I can have a cycle for and draw every little square to create the shape. Also, instead of BLU I can put like shape.colour so that I create a class for every color and we automatically have the corresponding colour or dark color depending on the shape
-            #bar0 = bar1
             render_text(textX,textY)
-
-            if 2*delta in gio.keys():
-                font = pygame.font.SysFont('Times New Roman', 60)
-                endtext = font.render('GAMEOVER', True, PINK)
-                win.blit(endtext, (textX-200,textY+100))
-                run = False
-                aria = False
-
+            run, aria = endgame(textX-200,textY+100)
             pygame.display.update()
 
 pygame.quit()
