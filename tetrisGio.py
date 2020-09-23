@@ -23,6 +23,14 @@ def drawBackground():
         for col in range(delta+ (row % (2*delta)), b-delta, 2*delta):
             pygame.draw.rect(win, dVIO, (row, col, delta,delta))
 
+def randomclass(possibleShapes):
+    random.shuffle(possibleShapes)
+    return possibleShapes[0]
+
+PS = ['I','T']
+PS = ['I']
+#PS = ['I','T','S1','S2','L1','L2','O']
+            
 def randomcolor(x):
     RCOL = random.randrange(x)
     if RCOL == 0:
@@ -54,21 +62,20 @@ counter = 0
 xf, yf, wf, hf = [[], [], [], []]
 gio = {}
 
-bar0 = Bar([delta,4*delta],BLU)
+bar0 = Stone(randomclass(PS))
 bar1 = bar0
 
 while run:
 
     bar0 = bar1
-    
     C = randomcolor(4)
-    bar1 = Bar([delta,4*delta], C)
+    bar1 = Stone(randomclass(PS))
     
     #starting position
     x = a//2
     y = delta
-    w = bar0.shape[0]
-    h = bar0.shape[1]
+    w = bar0.w
+    h = bar0.h
 
     if len(xf) >= 1:
         for z in range(yf[-1]+hf[-1], yf[-1], -delta):
@@ -180,7 +187,7 @@ while run:
             # Border
             pygame.draw.rect(win, dVIO, (0,0,a,b), 2*delta)
             # Next stone
-            pygame.draw.rect(win, bar1.COLOUR, (textX+50,b//4,delta,4*delta))
+            pygame.draw.rect(win, bar1.COLOUR, (textX+50,b//4,bar1.w,bar1.h))
             # Actual tetris stone
             pygame.draw.rect(win, bar0.COLOUR, (x,y,w,h)) # HERE I WILL CHANGE, instead of drawing one rect, I can have a cycle for and draw every little square to create the shape. Also, instead of BLU I can put like shape.colour so that I create a class for every color and we automatically have the corresponding colour or dark color depending on the shape
             render_text(textX,textY)
