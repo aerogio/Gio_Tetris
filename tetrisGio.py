@@ -27,10 +27,36 @@ def randomclass(possibleShapes):
     random.shuffle(possibleShapes)
     return possibleShapes[0]
 
-PS = ['I','T']
+def createstone(x, y, sto):
+    pygame.draw.rect(win, sto.COLOUR, (x, y, delta, delta))
+    xtmp = x2 = x
+    ytmp = y2 = y
+    for d in range(3):
+        if sto.disp2[sto.AD][d] == 'l':
+            x2 -= delta
+        elif sto.disp2[sto.AD][d] == 'r':
+            x2 += delta
+        elif sto.disp2[sto.AD][d] == 'rr':
+            x2 += delta
+            xtmp = x2
+        elif sto.disp2[sto.AD][d] == 'u':
+            y2 -= delta
+        elif sto.disp2[sto.AD][d] == 'uu':
+            y2 -= delta
+            ytmp = y2
+        elif sto.disp2[sto.AD][d] == 'd':
+            y2 += delta
+        elif sto.disp2[sto.AD][d] == 'dd':
+            y2 += delta
+            ytmp = y2
+        pygame.draw.rect(win, sto.COLOUR, (x2, y2, delta, delta))
+        x2 = xtmp
+        y2 = ytmp
+        
+PS = ['I', 'T']
 PS = ['I']
 #PS = ['I','T','S1','S2','L1','L2','O']
-            
+
 def randomcolor(x):
     RCOL = random.randrange(x)
     if RCOL == 0:
@@ -53,6 +79,20 @@ def endgame(x,y):
         aria = False
     return run, aria
 
+def pieceextremes(x, y, sto):
+    ymax = ymin = y
+    xmax = xmin = x
+    for i in sto.disp2[sto.AD]:
+        if i.startswith('d'):
+            ymax += delta
+        elif i.startswith('u'):
+            ymin -= delta
+        elif i.startswith('l'):
+            xmin -= delta
+        elif i.startswith('r'):
+            xmax += delta
+    return xmin, xmax, ymin, ymax
+
 #variable inizialization
 timer = 0
 run = True
@@ -62,20 +102,20 @@ counter = 0
 xf, yf, wf, hf = [[], [], [], []]
 gio = {}
 
-bar0 = Stone(randomclass(PS))
-bar1 = bar0
+piece0 = Stone(randomclass(PS))
+piece1 = piece0
 
 while run:
 
-    bar0 = bar1
+    piece0 = piece1
     C = randomcolor(4)
-    bar1 = Stone(randomclass(PS))
+    piece1 = Stone(randomclass(PS))
     
     #starting position
     x = a//2
     y = delta
-    w = bar0.w
-    h = bar0.h
+    w = piece0.w
+    h = piece0.h
 
     if len(xf) >= 1:
         for z in range(yf[-1]+hf[-1], yf[-1], -delta):
@@ -104,7 +144,13 @@ while run:
     
         drawBackground()
         pygame.time.delay(70)
+        dt = clock.tick()
+        timer = timer + dt
+        if timer > 1000 - 20*counter and state == RUNNING: 
+            y = y + delta
+            timer = 0
 
+        # to avoid contact with gio grey stones
         lll = rrr = True
         for hh in range (y,y+h+delta):
             if hh in gio.keys():
@@ -132,6 +178,10 @@ while run:
                     state = RUNNING                    
                     
                 elif event.key == pygame.K_UP and y < b - delta - max(h,w) and lll is True and rrr is True:
+                    if piece0.AD < len(piece0.disp2) - 1:
+                        piece0.AD += 1
+                    else:
+                        piece0.AD = 0
                     i = random.randrange(2)
                     if delta < x < a - w - delta:
                         if w < h:
@@ -144,32 +194,33 @@ while run:
                     h,w = w, h                    
                 
         
-        dt = clock.tick()
-        timer = timer + dt
-
-        if timer > 1000 - 20*counter and state == RUNNING: 
-            y = y + delta
-            timer = 0
-
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT] and x > delta and y < b - h - delta and lll is True:
-            x = x - delta    
-        if keys[pygame.K_RIGHT] and x < a - w - delta and y < b - h - delta and rrr is True:
-            x = x + delta
-        if keys[pygame.K_DOWN] and y < b - h - delta:
-            y = y + delta
             
+        xmin, xmax, ymin, ymax = pieceextremes(x, y, piece0)
+        # this avoid going outside
+        if xmin < delta:
+            x += delta
+
+        
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT] and xmin > delta and ymax < b - delta and lll is True:
+            x = x - delta    
+        if keys[pygame.K_RIGHT] and xmax < a - 2* delta and ymax < b - delta and rrr is True:
+            x = x + delta
+        if keys[pygame.K_DOWN] and ymax < b - delta:
+            y = y + delta
+
+
         if len(xf) >= 1:
             for z in range(b-delta,min(yf),-delta):
                 for j in range(x,x+w,delta):
                     if j in gio[z]:
-                        if y >= z - delta - h:
+                        if ymax + delta >= z - 2* delta:
                             aria = False
                     else:
-                        if y >= b - delta - h:
+                        if ymax + delta >= b - 2*delta:
                             aria = False
         else:
-            if y >= b - delta - h:
+            if ymax + delta >= b - 2*delta:
                 aria = False
         
         if not aria:
@@ -187,11 +238,11 @@ while run:
             # Border
             pygame.draw.rect(win, dVIO, (0,0,a,b), 2*delta)
             # Next stone
-            pygame.draw.rect(win, bar1.COLOUR, (textX+50,b//4,bar1.w,bar1.h))
+            createstone(textX+50, b//4, piece1)
             # Actual tetris stone
-            pygame.draw.rect(win, bar0.COLOUR, (x,y,w,h)) # HERE I WILL CHANGE, instead of drawing one rect, I can have a cycle for and draw every little square to create the shape. Also, instead of BLU I can put like shape.colour so that I create a class for every color and we automatically have the corresponding colour or dark color depending on the shape
-            render_text(textX,textY)
-            run, aria = endgame(textX-200,textY+100)
+            createstone(x, y, piece0)
+            render_text(textX, textY)
+            run, aria = endgame(textX-200, textY+100)
             pygame.display.update()
 
 pygame.quit()
