@@ -49,13 +49,17 @@ def createstone(x, y, sto):
         elif sto.disp2[sto.AD][d] == 'dd':
             y2 += delta
             ytmp = y2
+        elif sto.disp2[sto.AD][d] == 'o':
+            x2 += delta
+            y2 += delta
         pygame.draw.rect(win, sto.COLOUR, (x2, y2, delta, delta))
         x2 = xtmp
         y2 = ytmp
         
 PS = ['I', 'T']
 PS = ['I']
-#PS = ['I','T','S1','S2','L1','L2','O']
+PS = ['I','T','S1','S2','L1','L2','O']
+#PS = ['O']
 
 def randomcolor(x):
     RCOL = random.randrange(x)
@@ -71,7 +75,7 @@ def randomcolor(x):
 
 def endgame(x,y):
     global run, aria
-    if 2*delta in gio.keys():
+    if len(gio[2*delta]) >= 1:
         font = pygame.font.SysFont('Times New Roman', 60)
         endtext = font.render('GAMEOVER', True, PINK)
         win.blit(endtext, (textX-200,textY+100))
@@ -100,31 +104,60 @@ RUNNING, PAUSE = 0,1
 state = RUNNING
 counter = 0
 xf, yf, wf, hf = [[], [], [], []]
+YMAX, YMIN, XMAX, XMIN = [[], [], [], []]
 gio = {}
+gio2 = {}
+gio3 = {}
+for yy in range(b, 0,-delta):
+    gio[yy] = []
+
 
 piece0 = Stone(randomclass(PS))
 piece1 = piece0
 
 while run:
-
-    piece0 = piece1
-    C = randomcolor(4)
-    piece1 = Stone(randomclass(PS))
     
-    #starting position
-    x = a//2
-    y = delta
-    w = piece0.w
-    h = piece0.h
-
     if len(xf) >= 1:
-        for z in range(yf[-1]+hf[-1], yf[-1], -delta):
-            if z not in gio.keys():
-                gio[z] = []
-            for bta in range(xf[-1], xf[-1] + wf[-1], delta):
-                gio[z].append(bta)
-            gio[z] = sorted(gio[z])
-            
+        # populate gio
+        gio[yf[-1]].append(xf[-1])
+        xtmp = x2 = xf[-1]
+        ytmp = y2 = yf[-1]
+
+        for d in range(3):
+            if piece0.disp2[piece0.AD][d] == 'l':
+                x2 -= delta
+            elif piece0.disp2[piece0.AD][d] == 'r':
+                x2 += delta
+            elif piece0.disp2[piece0.AD][d] == 'rr':
+                x2 += delta
+                xtmp = x2
+            elif piece0.disp2[piece0.AD][d] == 'u':
+                y2 -= delta
+            elif piece0.disp2[piece0.AD][d] == 'uu':
+                y2 -= delta
+                ytmp = y2
+            elif piece0.disp2[piece0.AD][d] == 'd':
+                y2 += delta
+            elif piece0.disp2[piece0.AD][d] == 'dd':
+                y2 += delta
+                ytmp = y2
+            elif piece0.disp2[piece0.AD][d] == 'o':
+                y2 += delta
+                x2 += delta
+                
+            gio[y2].append(x2)
+            gio[y2] = sorted(gio[y2])            
+            x2 = xtmp
+            y2 = ytmp
+        
+        # for z in range(yf[-1]+hf[-1], yf[-1], -delta):
+        #     if z not in gio.keys():
+        #         gio[z] = []
+        #     for bta in range(xf[-1], xf[-1] + wf[-1], delta):
+        #         gio[z].append(bta)
+        #     gio[z] = sorted(gio[z])
+
+        # keep the line or delete it
         for z in range(b-delta, min(yf), -delta):
             jj = delta
             keepline = True
@@ -139,9 +172,19 @@ while run:
                         gio[zz] = gio[zz-delta]
                     gio[min(gio.keys())] = []
 
+    piece0 = piece1
+    C = randomcolor(4)
+    piece1 = Stone(randomclass(PS))
+    
+    #starting position
+    x = a//2
+    y = delta
+    w = piece0.w
+    h = piece0.h
+
+                    
     aria = True
     while aria:
-    
         drawBackground()
         pygame.time.delay(70)
         dt = clock.tick()
@@ -161,10 +204,10 @@ while run:
                         lll = False
         
         if len(xf) >= 1:
-            for z in range(b-delta, min(yf), -delta):
+            for z in range(b-delta, min(YMIN)-delta, -delta):
                 for ii in gio[z]:
-                    pygame.draw.rect(win, GRI, (ii, z-delta, delta, delta))
-        
+                    pygame.draw.rect(win, GRI, (ii, z, delta, delta))
+            
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 aria = run = False
@@ -181,25 +224,8 @@ while run:
                     if piece0.AD < len(piece0.disp2) - 1:
                         piece0.AD += 1
                     else:
-                        piece0.AD = 0
-                    i = random.randrange(2)
-                    if delta < x < a - w - delta:
-                        if w < h:
-                            j = -1
-                        else:
-                            j = 1
-                        x = x + j* delta * (1+i)
-                    elif x >= a - w - delta:
-                        x = a - delta - h
-                    h,w = w, h                    
-                
+                        piece0.AD = 0                
         
-            
-        xmin, xmax, ymin, ymax = pieceextremes(x, y, piece0)
-        # this avoid going outside
-        if xmin < delta:
-            x += delta
-
         
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT] and xmin > delta and ymax < b - delta and lll is True:
@@ -210,17 +236,68 @@ while run:
             y = y + delta
 
 
+        xmin, xmax, ymin, ymax = pieceextremes(x, y, piece0)
+        # this avoid going outside
+        if xmin < delta:
+            x += delta
+        elif xmax > a-delta:
+            x -= 2*delta
+        elif xmax > a-2*delta:
+            x -= delta
+            
         if len(xf) >= 1:
-            for z in range(b-delta,min(yf),-delta):
-                for j in range(x,x+w,delta):
-                    if j in gio[z]:
-                        if ymax + delta >= z - 2* delta:
+            for xx in range(delta, a, delta):
+                gio3[xx] = []
+            gio3[x].append(y)
+            
+            xtmp = x2 = xf[-1]
+            ytmp = y2 = yf[-1]
+        
+            for d in range(3):
+                if piece0.disp2[piece0.AD][d] == 'l':
+                    x2 -= delta
+                elif piece0.disp2[piece0.AD][d] == 'r':
+                    x2 += delta
+                elif piece0.disp2[piece0.AD][d] == 'rr':
+                    x2 += delta
+                    xtmp = x2
+                elif piece0.disp2[piece0.AD][d] == 'u':
+                    y2 -= delta
+                elif piece0.disp2[piece0.AD][d] == 'uu':
+                    y2 -= delta
+                    ytmp = y2
+                elif piece0.disp2[piece0.AD][d] == 'd':
+                    y2 += delta
+                elif piece0.disp2[piece0.AD][d] == 'dd':
+                    y2 += delta
+                    ytmp = y2
+                elif piece0.disp2[piece0.AD][d] == 'o':
+                    y2 += delta
+                    x2 += delta
+                
+                gio3[x2].append(y2)
+                x2 = xtmp
+                y2 = ytmp
+                
+            ytocompare = {}
+            
+            for xx in [a for a in gio3.keys() if gio3[a] != []]:
+                ytocompare[xx] = max(gio3[xx])
+
+            for z in range(b-delta, ymin-delta, -delta):
+                for xx in range(xmin, xmax+delta, delta):
+                    if xx in gio[z]:
+                        if xx in ytocompare.keys():
+                            if ytocompare[xx] + delta >= z:
+                                aria = False
+            #THIS IS NOT WORKING
+                        if ymax + delta  >= z:# - delta: # in my mind this should be >= z not z-delta
                             aria = False
                     else:
-                        if ymax + delta >= b - 2*delta:
+                        if ymax + delta >= b - delta:
                             aria = False
         else:
-            if ymax + delta >= b - 2*delta:
+            if ymax + delta >= b - delta:
                 aria = False
         
         if not aria:
@@ -228,6 +305,10 @@ while run:
             yf.append(y)
             wf.append(w)
             hf.append(h)
+            YMAX.append(ymax)
+            YMIN.append(ymin)
+            XMAX.append(xmax)
+            XMIN.append(xmin)
         
         if state == PAUSE:
             pause_text = pygame.font.SysFont('Times New Roman', 32).render('GAME IS PAUSED', True, pygame.color.Color('White'))
@@ -242,7 +323,7 @@ while run:
             # Actual tetris stone
             createstone(x, y, piece0)
             render_text(textX, textY)
-            run, aria = endgame(textX-200, textY+100)
+            #run, aria = endgame(textX-200, textY+100)
             pygame.display.update()
 
 pygame.quit()

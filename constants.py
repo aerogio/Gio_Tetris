@@ -40,7 +40,8 @@ class Stone:
 
         elif self.shape == 'O':
             self.disp = [delta, 2*delta]
-            self.disp2 = [['r', 'dd', 'r']]
+            self.disp2 = [['r', 'd', 'o']]
+#            self.disp2 = [['uu', 'rr', 'd']]
             self.COLOUR = PINK
             self.dCOLOUR = dPINK
 
