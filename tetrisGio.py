@@ -156,9 +156,6 @@ while run:
             Gio[x2] = sorted(Gio[x2])
             x2 = xtmp
             y2 = ytmp
-        YTOC = {}    
-        for xx in [a for a in Gio.keys() if Gio[a] != []]:
-            YTOC[xx] = min(Gio[xx])
             
         # keep the line or delete it
         for z in range(b-delta, min(yf), -delta):
@@ -171,9 +168,19 @@ while run:
                 if jj > a-delta:
                     keepline = False
                     counter += 1
+                    
                     for zz in range(z, min(gio.keys()), -delta):
                         gio[zz] = gio[zz-delta]
+                        
                     gio[min(gio.keys())] = []
+                    for xx in Gio.keys():
+                        print(z)
+                        Gio[xx] = [x for x in Gio[xx] if x != z]
+
+        YTOC = {}    
+        for xx in [a for a in Gio.keys() if Gio[a] != []]:
+            YTOC[xx] = min(Gio[xx])
+
 
     piece0 = piece1
     C = randomcolor(4)
