@@ -108,9 +108,13 @@ YMAX, YMIN, XMAX, XMIN = [[], [], [], []]
 gio = {}
 gio2 = {}
 gio3 = {}
+Gio = {}
+
 for yy in range(b, 0,-delta):
     gio[yy] = []
 
+for xx in range(0, a, delta):
+    Gio[xx] = []
 
 piece0 = Stone(randomclass(PS))
 piece1 = piece0
@@ -120,6 +124,7 @@ while run:
     if len(xf) >= 1:
         # populate gio
         gio[yf[-1]].append(xf[-1])
+        Gio[xf[-1]].append(yf[-1])
         xtmp = x2 = xf[-1]
         ytmp = y2 = yf[-1]
 
@@ -146,17 +151,15 @@ while run:
                 x2 += delta
                 
             gio[y2].append(x2)
-            gio[y2] = sorted(gio[y2])            
+            gio[y2] = sorted(gio[y2])
+            Gio[x2].append(y2)
+            Gio[x2] = sorted(Gio[x2])
             x2 = xtmp
             y2 = ytmp
-        
-        # for z in range(yf[-1]+hf[-1], yf[-1], -delta):
-        #     if z not in gio.keys():
-        #         gio[z] = []
-        #     for bta in range(xf[-1], xf[-1] + wf[-1], delta):
-        #         gio[z].append(bta)
-        #     gio[z] = sorted(gio[z])
-
+        YTOC = {}    
+        for xx in [a for a in Gio.keys() if Gio[a] != []]:
+            YTOC[xx] = min(Gio[xx])
+            
         # keep the line or delete it
         for z in range(b-delta, min(yf), -delta):
             jj = delta
@@ -175,6 +178,7 @@ while run:
     piece0 = piece1
     C = randomcolor(4)
     piece1 = Stone(randomclass(PS))
+    gio3 = {}
     
     #starting position
     x = a//2
@@ -182,7 +186,6 @@ while run:
     w = piece0.w
     h = piece0.h
 
-                    
     aria = True
     while aria:
         drawBackground()
@@ -195,7 +198,7 @@ while run:
 
         # to avoid contact with gio grey stones
         lll = rrr = True
-        for hh in range (y,y+h+delta):
+        for hh in range (y, y+h, delta):
             if hh in gio.keys():
                 for xx in gio[hh]:
                     if 0 < xx-x <= delta:
@@ -246,12 +249,13 @@ while run:
             x -= delta
             
         if len(xf) >= 1:
-            for xx in range(delta, a, delta):
+            for xx in range(0, a, delta):
                 gio3[xx] = []
+                
             gio3[x].append(y)
             
-            xtmp = x2 = xf[-1]
-            ytmp = y2 = yf[-1]
+            xtmp = x2 = x
+            ytmp = y2 = y
         
             for d in range(3):
                 if piece0.disp2[piece0.AD][d] == 'l':
@@ -276,26 +280,36 @@ while run:
                     x2 += delta
                 
                 gio3[x2].append(y2)
+                gio3[x2] = sorted(gio3[x2])
                 x2 = xtmp
                 y2 = ytmp
                 
             ytocompare = {}
-            
             for xx in [a for a in gio3.keys() if gio3[a] != []]:
                 ytocompare[xx] = max(gio3[xx])
 
-            for z in range(b-delta, ymin-delta, -delta):
-                for xx in range(xmin, xmax+delta, delta):
-                    if xx in gio[z]:
-                        if xx in ytocompare.keys():
-                            if ytocompare[xx] + delta >= z:
-                                aria = False
-            #THIS IS NOT WORKING
-                        if ymax + delta  >= z:# - delta: # in my mind this should be >= z not z-delta
+            for xx in range(xmin, xmax+delta, delta):
+                if xx in YTOC.keys():
+                    if xx in ytocompare.keys():
+                        if ytocompare[xx] + delta >= YTOC[xx]:
                             aria = False
-                    else:
-                        if ymax + delta >= b - delta:
-                            aria = False
+                else:
+                    if ymax + delta >= b-delta:
+                        aria = False
+
+                
+            # for z in range(b-delta, ymin-delta, -delta):
+            #     for xx in range(xmin, xmax+delta, delta):
+            #         if xx in gio[z]:
+            #             # if xx in ytocompare.keys():
+            #             #     if ytocompare[xx] + delta >= z:
+            #             #         aria = False
+            # #THIS IS NOT WORKING
+            #             if ymax + delta  >= z:# - delta: # in my mind this should be >= z not z-delta
+            #                 aria = False
+                    # else:
+                    #     if ymax + delta >= b - delta:
+                    #         aria = False
         else:
             if ymax + delta >= b - delta:
                 aria = False
@@ -323,7 +337,7 @@ while run:
             # Actual tetris stone
             createstone(x, y, piece0)
             render_text(textX, textY)
-            #run, aria = endgame(textX-200, textY+100)
+            run, aria = endgame(textX-200, textY+100)
             pygame.display.update()
 
 pygame.quit()
