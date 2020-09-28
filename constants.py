@@ -2,9 +2,9 @@
 
 # tetris geometric constants
 
-delta = 30
+delta = 28
 a = 14*delta
-b = 26*delta
+b = 23*delta
 c = 23*delta
 textX = 15*delta
 textY = b//2

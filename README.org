@@ -1,41 +1,38 @@
 * Gio's Tetris 
-This is my attempt to create a tetris game with
+
+** Intro 
+
+This is Gio's attempt to create a tetris game with
 pygame. Honestly I know there are infinite other
 attempts out there mostly success and so much
 better examples but I still want to try it out, to
-learn more how to use 
+learn more how to use Python, and Pygame.
 
-1. def
-2. class
+In any case I am having a ton of fun, which is
+always good.
 
-this things that makes efficient a program and
-object oriented stuff. Even though I am not sure
-if that makes sense or not. 
-Anyways
-Let's try it out!
+*Rules*, *Gameplay* and *History* [[https://en.wikipedia.org/wiki/Tetris][Here]]
 
-State of the art of now: 
+** Commands
 
-I manage to have some sort of solidifying thing,
-but sometimes it doesnt really work, but most
-times it does!
+1. <UP> To change the disposition of the stone
+2. <DOWN> To fasten the fall of the stone
+3. <RIGHT> To move right the stone
+4. <LEFT> To move left the stone
 
-Good Luck
+** Bugs
 
-* Omg 
-it looks so nice it's basically perfect, but there
-are some stuff which don't work super well. Like,
-when you go inside something from lateral and not
-from the top, well you shouldn't be able to do
-that.
+I know there are some bugs, which I will try to
+remove. Here there is a list:
 
-* Also One thing
+1. Sometimes the stone falls anyways into the grey
+   already fallen stones
+2. When it's GAMEOVER, it's very brutal to close
+   the game.
+3. If next up is Vertical stone, GAMEOVER doesn't work.
+4. ...
 
-Add new shapes, with like class
+** Code Optimization
 
-* Also
-
-As soon as you delete lines, the game should go
-faster, and you can do it with levels and the
-counter variable which I already created
-
+The code requires optimization, it is very messy
+right now.
