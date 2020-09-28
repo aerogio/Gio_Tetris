@@ -2,7 +2,7 @@
 
 # tetris geometric constants
 
-delta = 20
+delta = 30
 a = 14*delta
 b = 26*delta
 c = 23*delta
@@ -19,9 +19,9 @@ VER, dVER = (30, 200, 50), (10, 100, 30)
 BLU, dBLU = (50, 178, 250), (0, 100, 200)
 PINK, dPINK = (255,155, 164), (200,100,120)
 GIA, dGIA = (200, 255, 2), (150, 200, 2)
-VIO, dVIO = (60, 10, 80), (20, 0, 30) #background
+VIO, dVIO = (59, 61, 81), (20, 0, 30) #background
 NERO = (0, 0, 0)
-GRI = (80, 80, 80)
+GRI = (100, 120, 180)
 
 class Stone:    
     def __init__(self, shape):#, dCOLOUR):
@@ -73,31 +73,3 @@ class Stone:
         self.w = self.disp[0]
         self.h = self.disp[1]
 
-# for d in range(3):
-#     if sto.disp2[sto.AD][d] == 0:
-#         x2 -= delta
-#     elif sto.disp2[sto.AD][d] == 1:
-#         y2 += delta
-#     elif sto.disp2[sto.AD][d] == -1:
-#         y2 -= delta
-#         x2 += delta
-#     elif sto.disp2[sto.AD][d] == -2:
-#         y2 -= delta
-#     elif sto.disp2[sto.AD][d] == 2:
-#         y2 += delta
-#         x2 += delta
-#     pygame.draw.rect(win, sto.COLOUR, (x2, y2, delta, delta))
-
-
-    
-    
-    
-
-# def stoneI():
-#     if Stone.shape is 'I':
-#         sh = [delta,4*delta]
-#     else:
-#         print('error')
-#     return sh
-
-    

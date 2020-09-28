@@ -10,15 +10,19 @@ pygame.display.set_caption('Tetris')
 clock = pygame.time.Clock()
 
 # functions
-def render_text(x,y):
+def render_text(x, y):
     text = font.render('L E V E L', True, PINK)
     level = font.render(str(counter), True, PINK)
-    win.blit(text, (x,y))
-    win.blit(level, (x+50,y+50))
+    win.blit(text, (x, y))
+    if counter >= 10:
+        lat = 6
+    else:
+        lat = 5
+    win.blit(level, (x+lat*delta, y))
 
 def drawBackground():
     win.fill(VIO)
-    pygame.draw.rect(win,dVIO, (a, 0, c-a,b)) 
+    pygame.draw.rect(win, dVIO, (a, 0, c-a, b))
     for row in range(delta, a-delta, delta):
         for col in range(delta+ (row % (2*delta)), b-delta, 2*delta):
             pygame.draw.rect(win, dVIO, (row, col, delta,delta))
@@ -58,8 +62,7 @@ def createstone(x, y, sto):
         
 PS = ['I', 'T']
 PS = ['I']
-PS = ['I','T','S1','S2','L1','L2','O']
-#PS = ['O']
+PS = ['I', 'T', 'S1', 'S2', 'L1', 'L2', 'O']
 
 def randomcolor(x):
     RCOL = random.randrange(x)
@@ -174,12 +177,13 @@ while run:
                         
                     gio[min(gio.keys())] = []
                     for xx in Gio.keys():
-                        print(z)
                         Gio[xx] = [x for x in Gio[xx] if x != z]
+                        Gio[xx] = [x + delta for x in Gio[xx]]
 
         YTOC = {}    
         for xx in [a for a in Gio.keys() if Gio[a] != []]:
             YTOC[xx] = min(Gio[xx])
+        print(YTOC)
 
 
     piece0 = piece1
@@ -301,24 +305,12 @@ while run:
                         if ytocompare[xx] + delta >= YTOC[xx]:
                             aria = False
                 else:
-                    if ymax + delta >= b-delta:
+                    if ymax + delta >= b - delta:
                         aria = False
 
-                
-            # for z in range(b-delta, ymin-delta, -delta):
-            #     for xx in range(xmin, xmax+delta, delta):
-            #         if xx in gio[z]:
-            #             # if xx in ytocompare.keys():
-            #             #     if ytocompare[xx] + delta >= z:
-            #             #         aria = False
-            # #THIS IS NOT WORKING
-            #             if ymax + delta  >= z:# - delta: # in my mind this should be >= z not z-delta
-            #                 aria = False
-                    # else:
-                    #     if ymax + delta >= b - delta:
-                    #         aria = False
         else:
             if ymax + delta >= b - delta:
+                print('ciao')
                 aria = False
         
         if not aria:
@@ -344,8 +336,10 @@ while run:
             # Actual tetris stone
             createstone(x, y, piece0)
             render_text(textX, textY)
-            run, aria = endgame(textX-200, textY+100)
+            run, aria = endgame(textX-10*delta, textY+5*delta)
             pygame.display.update()
+
+
 
 pygame.quit()
 
