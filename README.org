@@ -30,7 +30,13 @@ remove. Here there is a list:
 2. When it's GAMEOVER, it's very brutal to close
    the game.
 3. If next up is Vertical stone, GAMEOVER doesn't work.
-4. ...
+4. when dropping pieces from the far right, they
+   sometimes overlap
+5. when dropping the long piece in vertical in the
+   middle it doesnt stop in the game window but
+   continues going into the oblivion
+6. sometimes it feels like a single button press
+   results to double clicking.
 
 ** Code Optimization
 

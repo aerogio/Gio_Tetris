@@ -59,6 +59,8 @@ def createstone(x, y, sto):
         pygame.draw.rect(win, sto.COLOUR, (x2, y2, delta, delta))
         x2 = xtmp
         y2 = ytmp
+
+        
         
 PS = ['I', 'T']
 PS = ['I']
