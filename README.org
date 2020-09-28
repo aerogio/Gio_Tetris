@@ -1,6 +1,6 @@
-* Gio's Tetris 
+#+SETUPFILE: https://fniessen.github.io/org-html-themes/setup/theme-readtheorg.setup
 
-** Intro 
+* Gio's Tetris 
 
 This is Gio's attempt to create a tetris game with
 pygame. Honestly I know there are infinite other
