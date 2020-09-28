@@ -183,8 +183,6 @@ while run:
         YTOC = {}    
         for xx in [a for a in Gio.keys() if Gio[a] != []]:
             YTOC[xx] = min(Gio[xx])
-        print(YTOC)
-
 
     piece0 = piece1
     C = randomcolor(4)
@@ -310,7 +308,6 @@ while run:
 
         else:
             if ymax + delta >= b - delta:
-                print('ciao')
                 aria = False
         
         if not aria:
